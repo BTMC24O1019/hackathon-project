@@ -1,0 +1,157 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Travel Chatbot</title>
+    <style>
+        /* Chatbot button */
+        #chatbot-button {
+            position: fixed;
+            bottom: 20px;
+            right: 20px;
+            width: 50px;
+            height: 50px;
+            background: #007bff;
+            color: white;
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 24px;
+            cursor: pointer;
+            transition: transform 0.3s ease, width 0.3s ease, height 0.3s ease;
+            z-index: 9999;
+        }
+
+        /* Chatbox container */
+        #chatbot-container {
+            position: fixed;
+            bottom: 20px;
+            right: 20px;
+            width: 50px; /* Initially same as button */
+            height: 50px;
+            background: white;
+            border-radius: 50%;
+            box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+            overflow: hidden;
+            transition: width 0.4s ease, height 0.4s ease, border-radius 0.4s ease;
+            z-index: 9999;
+        }
+
+        /* Expanded chatbox */
+        #chatbot-container.active {
+            width: 270px;
+            height: 370px;
+            border-radius: 10px;
+        }
+
+        /* Chat header */
+        #chat-header {
+            background: #007bff;
+            color: white;
+            padding: 10px;
+            text-align: center;
+            font-size: 16px;
+            border-top-left-radius: 10px;
+            border-top-right-radius: 10px;
+            display: none; /* Hidden initially */
+        }
+
+        /* Chat body */
+        #chat-body {
+            flex: 1;
+            padding: 10px;
+            overflow-y: auto;
+            display: none;
+        }
+
+        /* Chat input */
+        #chat-input {
+            display: flex;
+            padding: 10px;
+            border-top: 1px solid #ddd;
+            display: none;
+        }
+
+        #user-input {
+            flex: 1;
+            padding: 5px;
+        }
+
+        button {
+            background: #007bff;
+            color: white;
+            border: none;
+            padding: 5px 10px;
+            cursor: pointer;
+        }
+    </style>
+</head>
+<body>
+
+    <!-- Chatbot button & container -->
+    <div id="chatbot-container">
+        <div id="chatbot-button">💬</div>
+
+        <div id="chat-header">Travel Assistant</div>
+        <div id="chat-body"></div>
+        <div id="chat-input">
+            <input type="text" id="user-input" placeholder="Ask something...">
+            <button onclick="sendMessage()">Send</button>
+        </div>
+    </div>
+
+    <script>
+        const chatbotContainer = document.getElementById("chatbot-container");
+        const chatbotButton = document.getElementById("chatbot-button");
+        const chatHeader = document.getElementById("chat-header");
+        const chatBody = document.getElementById("chat-body");
+        const chatInput = document.getElementById("chat-input");
+
+        // Toggle Chatbot
+        chatbotButton.addEventListener("click", () => {
+            chatbotContainer.classList.toggle("active");
+
+            if (chatbotContainer.classList.contains("active")) {
+                setTimeout(() => {
+                    chatHeader.style.display = "block";
+                    chatBody.style.display = "block";
+                    chatInput.style.display = "flex";
+                }, 300); // Delay to match transition
+            } else {
+                chatHeader.style.display = "none";
+                chatBody.style.display = "none";
+                chatInput.style.display = "none";
+            }
+        });
+
+        const responses = {
+            "hello": "Hello! How can I assist you with your travel plans?",
+            "destinations": "We offer information on top travel destinations in India, including Goa, Jaipur, Kerala, and more!",
+            "hotels": "You can find the best hotels with us. Which city are you traveling to?",
+            "transport": "We provide information on flights, trains, and local transport options.",
+            "activities": "Explore exciting activities like trekking, sightseeing, and cultural tours!",
+            "travel plan": "Tell me your preferences, and I'll suggest a customized travel itinerary for you!"
+        };
+
+        function sendMessage() {
+            let inputField = document.getElementById("user-input");
+            let message = inputField.value.toLowerCase();
+            let chatBody = document.getElementById("chat-body");
+
+            if (message.trim() === "") return;
+
+            chatBody.innerHTML += `<div><strong>You:</strong> ${message}</div>`;
+            inputField.value = "";
+
+            let response = responses[message] || "I'm not sure how to answer that. Try asking about destinations, hotels, transport, or activities!";
+            setTimeout(() => {
+                chatBody.innerHTML += `<div><strong>Bot:</strong> ${response}</div>`;
+                chatBody.scrollTop = chatBody.scrollHeight;
+            }, 500);
+        }
+    </script>
+
+</body>
+</html>
